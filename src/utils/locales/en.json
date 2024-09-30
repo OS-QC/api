@@ -1,0 +1,14 @@
+{
+	"email": "email",
+	"customValidator": "customValidator",
+	"isEmail": "Email",
+	"invalid_email": "invalid email",
+	"name": "name",
+	"is_required": "is required",
+	"password": "password",
+	"lowercase_letter is required": "lowercase_letter is required",
+	"capital_letter required": "capital_letter required",
+	"a_special symbol is required": "a_special symbol is required",
+	"a_special_symbol_is_required": "a_special_symbol_is_required",
+	"a special symbol is required": "a special symbol is required"
+}
