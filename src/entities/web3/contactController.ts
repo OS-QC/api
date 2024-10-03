@@ -14,16 +14,21 @@ import AppConfig from '@config/AppConfig'
 import { EExchange } from '@type/type'
 // import { DEFAULT_RETURN_FORMAT, ETH_DATA_FORMAT } from 'web3'
 import { DEFAULT_RETURN_FORMAT } from 'web3'
+import * as cheerio from 'cheerio';
+import puppeteer from 'puppeteer';
 import UniswapService from './uniswapService'
+import HardhatService from './hardhatService'
 // TODO esto no funciona import * as CoinMarketCap from 'node-coinmarketcap-rest-api'
 
 @Route('contract')
 @Tags('Contract')
 export class contactController extends Controller {
   private uniswapService: typeof UniswapService
+  private hardhatService: typeof HardhatService
   constructor() {
     super()
     this.uniswapService = UniswapService
+    this.hardhatService = HardhatService
   }
 
   /**
@@ -82,9 +87,36 @@ export class contactController extends Controller {
         console.log('pQueryParams.type :>> ', pQueryParams.type);
         const ratesEnd: IRatesEnd[] = []
         if (pQueryParams.type === EExchange.UNISWAP) {
-          const uniswapData = await this.uniswapService.data()
-          return { success: true, data: { ratesEnd: uniswapData }, message: 'success' }
+          const hola = await this.hardhatService.getDexPrices()
+          console.log('hola :>> ', hola);
+          return { success: true, data: 'Vuelva mas tarde' , message: 'success' }
         }
+        // if (pQueryParams.type === EExchange.UNISWAP) {
+        //   console.log('hola');
+        //   const result: any[] = [];
+        //   // const uniswapData = await this.uniswapService.data()
+        //   // return { success: true, data: { ratesEnd: uniswapData }, message: 'success' }
+        //   const browser = await puppeteer.launch();
+        //   const page = await browser.newPage();
+        //   await page.goto('https://app.uniswap.org/explore', { waitUntil: 'networkidle2' })
+        //   await page.waitForSelector('#root');
+        //   const content = await page.content();
+        //   // console.log('content :>> ', content);
+          
+        //   console.log('ya estamos en response');
+        //   const document = cheerio.load(content);
+        //   console.log('Antes de buscar');
+        //   document('div[data-testid="top-tokens-explore-table"]').each((index, element) => {
+        //     console.log('_index :>> ', index)
+        //     console.log('element :>> ', element)
+        //     const value = document(element).find('div[data-testid="price-cell"] > span').text()
+        //     console.log('value :>> ', value);
+        //     result.push(value);
+        //   });
+        //   await browser.close();
+
+        //   return { success: true, data: { ratesEnd: result }, message: 'success' }
+        // }
         if (pQueryParams.type === EExchange.COINGECKO) {
           const rates: { id: string, name: string, rate?: number, usd: number }[] = [
             {
@@ -137,22 +169,16 @@ export class contactController extends Controller {
           return { success: true, data: { ratesEnd: rates }, message: 'success' }
         }
         if (pQueryParams.type === EExchange.COINMARKETCAP) {
-          const CoinMarketCap = require('node-coinmarketcap-rest-api')
-          console.log('requerimos la libreria')
-          const coinmarketcap = new CoinMarketCap()
-          console.log('coinmarketcap')
-          coinmarketcap.get('bitcoin', (coin: any) => {
-              console.log(`Precio de Bitcoin (USD): ${coin.price_usd}`);
-          })
-          coinmarketcap.getAllTickers((coin: any) => {
-              console.log(`Precio de Bitcoin (USD): ${coin.price_usd}`)
-              ratesEnd.push(coin)
+          // cryptocurrency/quotes/latest
+          // const url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=BTC,ETH,USDT'
+          const url = 'https://pro-api.coinmarketcap.com/v1/exchange/market-pairs/latest'
+          const response = await axios.get(url, {
+            headers: {
+              'X-CMC_PRO_API_KEY': '59515341-af9d-49fa-bc6f-c44e241d9288',
+            },
           });
-          coinmarketcap.getGlobalData((globalData: any) => {
-              console.log('Datos globales del mercado:', globalData);
-          })
-          console.log('finalizo')
-          return { success: true, data: { ratesEnd }, message: 'success' }
+          console.log('response.data :>> ', response.data);
+          return { success: true, data: response.data.data, message: 'success' }
         }
         const response = await axios.get(`${AppConfig[pQueryParams.type]}`)
         const rates = response.data.data.rates
@@ -176,7 +202,7 @@ export class contactController extends Controller {
         this.setStatus(200)
         return { success: true, data: { ratesEnd }, message: 'success' }
       } catch (error) {
-        console.log('dio error');
+        console.log('dio error', error);
         this.setStatus(400) // HTTP 401 Unauthorized
         return { success: false, data: null, message: 'Ocurrio un error' }
       }

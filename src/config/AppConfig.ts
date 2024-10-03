@@ -20,6 +20,9 @@ const AppConfig = {
   USDT_CONTRACT_ADDRESS: process.env.USDT_CONTRACT_ADDRESS || '',
   ETH_ADDRESS: process.env.ETH_ADDRESS || '',
   GANACHE_RUL: process.env.GANACHE_RUL || 'http://localhost:7545',
+  INFURA_API_KEY: process.env.INFURA_API_KEY || '',
+  PRIVATE_KEY: process.env.PRIVATE_KEY || '',
+  CONTRACT_ADDRESS: process.env.CONTRACT_ADDRESS || '',
 }
 
 export default Object.freeze(AppConfig)
