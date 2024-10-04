@@ -1,9 +1,10 @@
-// import { web3 } from 'app';
-import { ethers } from 'ethers'
-import AppConfig from '@config/AppConfig';
+import { ethers } from 'ethers';
+//import AppConfig from '@config/AppConfig';
+import AppConfig from '../../config/AppConfig.ts';
+
 
 // Configuración de la red y el proveedor
-const provider = new ethers.InfuraProvider('mainnet', AppConfig.INFURA_API_KEY);
+const provider = new ethers.JsonRpcProvider('https://bsc-dataseed.binance.org/');
 const wallet = new ethers.Wallet(AppConfig.PRIVATE_KEY, provider);
 
 // Dirección del contrato y ABI
@@ -154,12 +155,23 @@ const abi = [
     }
 ];
 const contract = new ethers.Contract(contractAddress, abi, wallet);
+
+// Variables para los valores del swap
+const tokenAddress = "0x0000000000000000000000000000000000000000"; // Dirección del token BNB
+const amount = ethers.parseUnits("1", 18); // 500 BNB en unidades
+const exchanges = ["0x67ee3Cb086F8a16f34beE3ca72FAD36F7Db929e2", "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82"]; // Direcciones de los exchanges
+const swapData = [
+    ethers.AbiCoder.defaultAbiCoder().encode(["address", "uint256"], ["0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", amount]),
+    ethers.AbiCoder.defaultAbiCoder().encode(["address", "uint256"], ["0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", amount])
+];
+
 class ContractService {
     public async main() {
+        // Parámetros de arbitraje
+        const params = ethers.AbiCoder.defaultAbiCoder().encode(["address[]", "bytes[]"], [exchanges, swapData]);
+
         // Solicitar un préstamo flash
-        const tokenAddress = "direccion_del_token";
-        const amount = ethers.parseUnits("1000", 18); // Cantidad en unidades del token
-        const tx = await contract.requestFlashLoan(tokenAddress, amount);
+        const tx = await contract.requestFlashLoan(tokenAddress, amount, params);
         console.log(`Transacción enviada: ${tx.hash}`);
         await tx.wait();
         console.log('Préstamo flash solicitado con éxito');
@@ -175,4 +187,5 @@ class ContractService {
         console.log('Tokens retirados con éxito');
     }
 }
-export default new ContractService()
+
+export default new ContractService();
