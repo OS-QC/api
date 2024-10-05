@@ -8,7 +8,7 @@ const wallet = new ethers.Wallet(AppConfig.PRIVATE_KEY, provider);
 
 // Dirección del contrato y ABI
 const contractAddress = AppConfig.CONTRACT_ADDRESS;
-const abi = [
+const abi: any = [
     {
         "inputs": [
             {
@@ -165,11 +165,15 @@ class ContractService {
       try {
         // Solicitar un préstamo flash
         const amount = ethers.parseUnits(pAmount || "1", 18)
+        console.log('amount :>> ', amount);
         const swapData = [
             ethers.AbiCoder.defaultAbiCoder().encode(["address", "uint256"], ["0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", amount]),
             ethers.AbiCoder.defaultAbiCoder().encode(["address", "uint256"], ["0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", amount])
         ];
         const params = ethers.AbiCoder.defaultAbiCoder().encode(["address[]", "bytes[]"], [exchanges, swapData])
+        console.log("Token Address:", tokenAddress);
+        console.log("Amount:", amount.toString());
+        console.log("Params:", params);
         const tx = await contract.requestFlashLoan(tokenAddress, amount, params)
         console.log(`Transacción enviada: ${tx.hash}`)
         await tx.wait()
