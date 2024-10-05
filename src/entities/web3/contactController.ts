@@ -18,7 +18,7 @@ import { DEFAULT_RETURN_FORMAT } from 'web3'
 // import puppeteer from 'puppeteer';
 // import UniswapService from './uniswapService'
 import HardhatService from './hardhatService'
-import ContractService from './contractService'
+import ContractService from './contractServiceBNBAave'
 // TODO esto no funciona import * as CoinMarketCap from 'node-coinmarketcap-rest-api'
 
 @Route('contract')
@@ -363,9 +363,9 @@ export class contactController extends Controller {
 
     @SuccessResponse('200', 'Ok')
     @Post('/dinamicContract')
-    public async dinamicContract(@Body() requestBody: { tokenAddress: string, amount: number }): Promise<{ success: boolean, data: any | null; token?: string; message?: any }> {
+    public async dinamicContract(@Body() requestBody: { amount: string }): Promise<{ success: boolean, data: any | null; token?: string; message?: any }> {
       try {
-        const contract = this.contractService.main(requestBody.tokenAddress, requestBody.amount)
+        const contract = await this.contractService.main(requestBody.amount)
         console.log('contract :>> ', contract)
         return { success: true, data: "Ya interactuo", message: 'success' }
       } catch (error) {

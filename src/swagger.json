@@ -839,16 +839,11 @@
 							"schema": {
 								"properties": {
 									"amount": {
-										"type": "number",
-										"format": "double"
-									},
-									"tokenAddress": {
 										"type": "string"
 									}
 								},
 								"required": [
-									"amount",
-									"tokenAddress"
+									"amount"
 								],
 								"type": "object"
 							}

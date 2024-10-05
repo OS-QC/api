@@ -1,9 +1,9 @@
-// import { web3 } from 'app';
-import { ethers } from 'ethers'
+import { ethers } from 'ethers';
 import AppConfig from '@config/AppConfig';
 
+
 // Configuración de la red y el proveedor
-const provider = new ethers.InfuraProvider('mainnet', AppConfig.INFURA_API_KEY);
+const provider = new ethers.JsonRpcProvider('https://bsc-dataseed.binance.org/');
 const wallet = new ethers.Wallet(AppConfig.PRIVATE_KEY, provider);
 
 // Dirección del contrato y ABI
@@ -154,25 +154,37 @@ const abi = [
     }
 ];
 const contract = new ethers.Contract(contractAddress, abi, wallet);
+
+// Variables para los valores del swap
+const tokenAddress = "0x0000000000000000000000000000000000000000"; // Dirección del token BNB
+// const amount = ethers.parseUnits("1", 18); // 500 BNB en unidades
+const exchanges = ["0x67ee3Cb086F8a16f34beE3ca72FAD36F7Db929e2", "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82"]; // Direcciones de los exchanges
+
 class ContractService {
-    public async main(pTokenAddress: string, pAmount: number): Promise<boolean> {
+    public async main(pAmount: string): Promise<boolean> {
       try {
-        const amount = ethers.parseUnits(pAmount.toString(), 18);
-        const tx = await contract.requestFlashLoan(pTokenAddress, amount);
-        console.log(`Transacción enviada: ${tx.hash}`);
-        await tx.wait();
-        console.log('Préstamo flash solicitado con éxito');
+        // Solicitar un préstamo flash
+        const amount = ethers.parseUnits(pAmount || "1", 18)
+        const swapData = [
+            ethers.AbiCoder.defaultAbiCoder().encode(["address", "uint256"], ["0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", amount]),
+            ethers.AbiCoder.defaultAbiCoder().encode(["address", "uint256"], ["0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", amount])
+        ];
+        const params = ethers.AbiCoder.defaultAbiCoder().encode(["address[]", "bytes[]"], [exchanges, swapData])
+        const tx = await contract.requestFlashLoan(tokenAddress, amount, params)
+        console.log(`Transacción enviada: ${tx.hash}`)
+        await tx.wait()
+        console.log('Préstamo flash solicitado con éxito')
     
         // Verificar el balance del contrato
-        const balance = await contract.getBalance(pTokenAddress);
-        console.log(`Balance del contrato: ${ethers.formatUnits(balance, 18)} tokens`);
+        const balance = await contract.getBalance(tokenAddress)
+        console.log(`Balance del contrato: ${ethers.formatUnits(balance, 18)} tokens`)
     
         // Retirar tokens (solo propietario)
-        const withdrawTx = await contract.withdraw(pTokenAddress);
-        console.log(`Transacción de retiro enviada: ${withdrawTx.hash}`);
-        await withdrawTx.wait();
-        console.log('Tokens retirados con éxito');
-        contract.getFunction
+        const withdrawTx = await contract.withdraw(tokenAddress);
+        console.log(`Transacción de retiro enviada: ${withdrawTx.hash}`)
+        await withdrawTx.wait()
+        console.log('Tokens retirados con éxito')
+        // contract.getFunction
         // address[] memory exchanges = new address;
         // exchanges[0] = address(exchange1);
         // exchanges[1] = address(exchange2);
@@ -187,8 +199,10 @@ class ContractService {
         // flashLoanArbitrage.requestFlashLoan(tokenAddress, amount, params);
         return true
       } catch (error) {
+        console.log('error :>> ', error)
         throw error
       }
     }
 }
-export default new ContractService()
+
+export default new ContractService();
