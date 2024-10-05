@@ -170,9 +170,13 @@ class ContractService {
             ethers.AbiCoder.defaultAbiCoder().encode(["address", "uint256"], ["0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", amount])
         ];
         const params = ethers.AbiCoder.defaultAbiCoder().encode(["address[]", "bytes[]"], [exchanges, swapData])
-        const tx = await contract.requestFlashLoan(tokenAddress, amount, params)
+        const tx = await contract.requestFlashLoan(tokenAddress, amount)
         console.log(`Transacción enviada: ${tx.hash}`)
         await tx.wait()
+        if (tx.status === true) {
+            const ep = await contract.executeOperation(tokenAddress, amount, params)
+            console.log(`Transacción enviada: ${ep.hash}`)
+        }
         console.log('Préstamo flash solicitado con éxito')
     
         // Verificar el balance del contrato
