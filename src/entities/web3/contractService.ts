@@ -155,24 +155,40 @@ const abi = [
 ];
 const contract = new ethers.Contract(contractAddress, abi, wallet);
 class ContractService {
-    public async main() {
-        // Solicitar un préstamo flash
-        const tokenAddress = "direccion_del_token";
-        const amount = ethers.parseUnits("1000", 18); // Cantidad en unidades del token
-        const tx = await contract.requestFlashLoan(tokenAddress, amount);
+    public async main(pTokenAddress: string, pAmount: number): Promise<boolean> {
+      try {
+        const amount = ethers.parseUnits(pAmount.toString(), 18);
+        const tx = await contract.requestFlashLoan(pTokenAddress, amount);
         console.log(`Transacción enviada: ${tx.hash}`);
         await tx.wait();
         console.log('Préstamo flash solicitado con éxito');
     
         // Verificar el balance del contrato
-        const balance = await contract.getBalance(tokenAddress);
+        const balance = await contract.getBalance(pTokenAddress);
         console.log(`Balance del contrato: ${ethers.formatUnits(balance, 18)} tokens`);
     
         // Retirar tokens (solo propietario)
-        const withdrawTx = await contract.withdraw(tokenAddress);
+        const withdrawTx = await contract.withdraw(pTokenAddress);
         console.log(`Transacción de retiro enviada: ${withdrawTx.hash}`);
         await withdrawTx.wait();
         console.log('Tokens retirados con éxito');
+        contract.getFunction
+        // address[] memory exchanges = new address;
+        // exchanges[0] = address(exchange1);
+        // exchanges[1] = address(exchange2);
+
+        // bytes[] memory data = new bytes;
+        // data[0] = abi.encodeWithSignature("swap(address,uint256)", tokenAddress, amount);
+        // data[1] = abi.encodeWithSignature("swap(address,uint256)", tokenAddress, amount);
+
+        // bytes memory params = abi.encode(exchanges, data);
+
+        // // Solicitar el préstamo flash
+        // flashLoanArbitrage.requestFlashLoan(tokenAddress, amount, params);
+        return true
+      } catch (error) {
+        throw error
+      }
     }
 }
 export default new ContractService()

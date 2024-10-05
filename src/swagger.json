@@ -795,6 +795,67 @@
 				"security": [],
 				"parameters": []
 			}
+		},
+		"/contract/dinamicContract": {
+			"post": {
+				"operationId": "DinamicContract",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {},
+										"token": {
+											"type": "string"
+										},
+										"data": {
+											"nullable": true
+										},
+										"success": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"data",
+										"success"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Contract"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"amount": {
+										"type": "number",
+										"format": "double"
+									},
+									"tokenAddress": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"amount",
+									"tokenAddress"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
 		}
 	},
 	"servers": [
