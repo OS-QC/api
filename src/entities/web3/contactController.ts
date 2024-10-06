@@ -374,4 +374,5 @@ export class contactController extends Controller {
         return { success: false, data: null, message: 'Ocurrio un error' }
       }
     }
+    
 }

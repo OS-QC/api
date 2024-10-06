@@ -12,10 +12,13 @@ export const app = express();
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 // export const web3 = new Web3(AppConfig.PROVIDER_CONTEXT)
 // export const web3 = new Web3(new Web3.providers.HttpProvider(AppConfig.GANACHE_RUL))
-export const web3 = new Web3('https://mainnet.infura.io/v3/c2e9d6cf71624ba6bed24a6aa2081b80')
+//export const web3 = new Web3('https://mainnet.infura.io/v3/c2e9d6cf71624ba6bed24a6aa2081b80')
+export const web3 = new Web3('https://bsc-dataseed2.binance.org/')
+
 web3.eth.net.isListening()
   .then(() => console.log('Connected to the network'))
   .catch((error) => console.error('Failed to connect to the network:', error));
+  
 // export const provider = new ethers.JsonRpcProvider('http://localhost:7545')
 // const address = '0xAbF916751042250E3015003da5CfB93028dAC15a'
 // console.log('address :>> ', address);
