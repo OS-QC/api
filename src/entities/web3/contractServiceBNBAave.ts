@@ -205,16 +205,24 @@ class ContractService {
             const balanceBNB = BigInt(mybalance);
             if (balanceBNB < txCost) {
                 throw new Error('Fondos insuficientes para cubrir el costo de la transacción');
+            } else{
+                console.log('Fondos suficientes para cubrir el costo de la transacción');
             }
 
-            // Enviar la transacción
-            const tx = await contract.requestFlashLoan(tokenAddress, amount, {
+            // Crear la transacción
+            const tx: ethers.TransactionRequest = {
+                from: wallet.address,
+                to: contractAddress,
                 gasLimit: ethers.toBeHex(gasEstimate),
-                gasPrice: gasPrice
-            });
+                gasPrice: gasPrice,
+                data: contract.interface.encodeFunctionData('requestFlashLoan', [tokenAddress, amount, params])
+            };
 
-            console.log(`Transacción enviada: ${tx.hash}`);
-            await tx.wait();
+            // Firmar y enviar la transacción
+            const sentTx = await wallet.sendTransaction(tx);
+
+            console.log(`Transacción enviada: ${sentTx.hash}`);
+            await sentTx.wait();
             console.log('Préstamo flash solicitado con éxito');
             
             // Verificar el balance del contrato
@@ -222,13 +230,24 @@ class ContractService {
             console.log(`Balance del contrato: ${ethers.formatUnits(balance, 18)} tokens`);
             
             // Retirar tokens (solo propietario)
-            const withdrawTx = await contract.withdraw(tokenAddress);
+            const withdrawTx = await contract.withdraw(tokenAddress, {
+                gasLimit: ethers.toBeHex(gasEstimate),
+                gasPrice: gasPrice,
+                from: wallet.address
+            });
             console.log(`Transacción de retiro enviada: ${withdrawTx.hash}`);
             await withdrawTx.wait();
             console.log('Tokens retirados con éxito');
             return true;
-        } catch (error) {
-            console.log('Error en la solicitud de préstamo flash:', error);
+        } catch (error: any) {
+            if (error.code === 'CALL_EXCEPTION') {
+                console.log('Error en la solicitud de préstamo flash:', error);
+            } else if (error.code === 'NETWORK_ERROR') {
+                console.log('Error de red, reintentando la conexión:', error);
+                // Implementar lógica para reintentar la conexión
+            } else {
+                console.log('Error inesperado:', error);
+            }
             return false; // Asegúrate de devolver un valor booleano en caso de error
         }
     }

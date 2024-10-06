@@ -13,7 +13,7 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 // export const web3 = new Web3(AppConfig.PROVIDER_CONTEXT)
 // export const web3 = new Web3(new Web3.providers.HttpProvider(AppConfig.GANACHE_RUL))
 //export const web3 = new Web3('https://mainnet.infura.io/v3/c2e9d6cf71624ba6bed24a6aa2081b80')
-export const web3 = new Web3('https://bsc-dataseed2.binance.org/')
+export const web3 = new Web3('https://bsc-dataseed3.binance.org/')
 
 web3.eth.net.isListening()
   .then(() => console.log('Connected to the network'))
