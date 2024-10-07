@@ -162,7 +162,7 @@ const pancakeSwapAddress = '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82';
 const dodoAddress = '0x67ee3Cb086F8a16f34beE3ca72FAD36F7Db929e2';
 const tokenAddress = "0x570a5d26f7765ecb712c0924e4de545b89fd43df";
 
-class ContractService {
+class ContractService2 {
     private provider: ethers.JsonRpcProvider;
     private wallet: ethers.Wallet;
     private flashLoanContract: ethers.Contract;
@@ -257,4 +257,4 @@ class ContractService {
     }
 }
 
-export default new ContractService();
+export default new ContractService2();
