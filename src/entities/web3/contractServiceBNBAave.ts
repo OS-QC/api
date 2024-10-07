@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { ethers, ContractInterface } from 'ethers';
 import AppConfig from '@config/AppConfig';
 import Web3 from 'web3';
 
@@ -154,7 +154,7 @@ const abi: any = [
         "type": "receive"
     }
 ];
-const contract = new ethers.Contract(contractAddress, abi, wallet);
+const contract: ContractInterface = new ethers.Contract(contractAddress, abi, wallet);
 
 // Variables para los valores del swap
 const tokenAddress = "0xB8c77482e45F1F44dE1745F52C74426C631bDD52"; // Dirección del token BNB
@@ -185,7 +185,7 @@ class ContractService {
                 gasEstimate = BigInt('5000000'); // Establecer un límite de gas predeterminado
             }
 
-            // Obtener el precio del gas
+            // Obtener el precio del gas (TODOya tenemos el precio del gas?)
             const feeData = await provider.getFeeData();
             const gasPrice = feeData.gasPrice;
             if (!gasPrice) {
@@ -210,13 +210,15 @@ class ContractService {
             }
 
             // Crear la transacción
+            const transactionData: string = await contract.encodeFunctionData('requestFlashLoan', [tokenAddress, amount, params])
+            // contract.instance.encodeFunctionData('requestFlashLoan', [tokenAddress, amount, params])
             const tx: ethers.TransactionRequest = {
                 from: wallet.address,
                 to: contractAddress,
                 gasLimit: ethers.toBeHex(gasEstimate),
                 gasPrice: gasPrice,
-                data: contract.interface.encodeFunctionData('requestFlashLoan', [tokenAddress, amount, params])
-            };
+                data: transactionData
+            }
 
             // Firmar y enviar la transacción
             const sentTx = await wallet.sendTransaction(tx);
