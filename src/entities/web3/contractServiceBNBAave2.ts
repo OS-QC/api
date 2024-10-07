@@ -160,6 +160,7 @@ const flashLoanABI: any = [
 // Direcciones de los contratos de los intercambios
 const pancakeSwapAddress = '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82';
 const dodoAddress = '0x67ee3Cb086F8a16f34beE3ca72FAD36F7Db929e2';
+const tokenAddress = "0x570a5d26f7765ecb712c0924e4de545b89fd43df";
 
 class ContractService {
     private provider: ethers.JsonRpcProvider;
@@ -178,21 +179,21 @@ class ContractService {
 
     public async main(pAmount: string): Promise<boolean> {
         try {
-            const amount = ethers.utils.parseUnits(pAmount || "1", 18);
+            const amount = ethers.parseUnits(pAmount || "1", 18);
             const mybalance = await this.provider.getBalance(this.wallet.address);
-            console.log(`Balance: ${ethers.utils.formatEther(mybalance)} BNB`);
+            console.log(`Balance: ${ethers.formatEther(mybalance)} BNB`);
             console.log('amount :>> ', amount);
 
             const swapData = [
-                ethers.utils.defaultAbiCoder.encode(["address", "uint256"], ["0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", amount]),
-                ethers.utils.defaultAbiCoder.encode(["address", "uint256"], ["0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", amount])
+                ethers.AbiCoder.defaultAbiCoder().encode(["address", "uint256"], ["0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", amount]),
+                ethers.AbiCoder.defaultAbiCoder().encode(["address", "uint256"], ["0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", amount])
             ];
-            const params = ethers.utils.defaultAbiCoder.encode(["address[]", "bytes[]"], [[dodoAddress, pancakeSwapAddress], swapData]);
+            const params = ethers.AbiCoder.defaultAbiCoder().encode(["address[]", "bytes[]"], [[dodoAddress, pancakeSwapAddress], swapData]);
             console.log("Params:", params);
 
             let gasEstimate;
             try {
-                gasEstimate = await this.flashLoanContract.estimateGas.requestFlashLoan(tokenAddress, amount, params);
+                gasEstimate = await this.flashLoanContract.requestFlashLoan.estimateGas(tokenAddress, amount, params);
                 console.log(`Gas estimado: ${gasEstimate.toString()}`);
             } catch (error) {
                 console.log('Error en la estimación del gas, forzando la transacción:', error);
@@ -204,12 +205,12 @@ class ContractService {
             if (!gasPrice) {
                 throw new Error('No se pudo obtener el precio del gas');
             }
-            console.log(`Precio del gas: ${ethers.utils.formatUnits(gasPrice, 'gwei')} gwei`);
+            console.log(`Precio del gas: ${ethers.formatUnits(gasPrice, 'gwei')} gwei`);
 
             const gasEstimateBN = BigInt(gasEstimate.toString());
             const gasPriceBN = BigInt(gasPrice.toString());
             const txCost = gasEstimateBN * gasPriceBN;
-            console.log(`Costo total de la transacción: ${ethers.utils.formatUnits(txCost.toString(), 'ether')} BNB`);
+            console.log(`Costo total de la transacción: ${ethers.formatUnits(txCost.toString(), 'ether')} BNB`);
 
             const balanceBNB = BigInt(mybalance.toString());
             if (balanceBNB < txCost) {
@@ -221,7 +222,7 @@ class ContractService {
             const tx: ethers.TransactionRequest = {
                 from: this.wallet.address,
                 to: AppConfig.CONTRACT_ADDRESS,
-                gasLimit: ethers.utils.hexlify(gasEstimate),
+                gasLimit: ethers.toBeHex(gasEstimate),
                 gasPrice: gasPrice,
                 data: this.flashLoanContract.interface.encodeFunctionData('requestFlashLoan', [tokenAddress, amount, params])
             };
@@ -232,10 +233,10 @@ class ContractService {
             console.log('Préstamo flash solicitado con éxito');
 
             const balance = await this.flashLoanContract.getBalance(tokenAddress);
-            console.log(`Balance del contrato: ${ethers.utils.formatUnits(balance, 18)} tokens`);
+            console.log(`Balance del contrato: ${ethers.formatUnits(balance, 18)} tokens`);
 
             const withdrawTx = await this.flashLoanContract.withdraw(tokenAddress, {
-                gasLimit: ethers.utils.hexlify(gasEstimate),
+                gasLimit: ethers.toBeHex(gasEstimate),
                 gasPrice: gasPrice,
                 from: this.wallet.address
             });

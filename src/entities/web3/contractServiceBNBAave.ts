@@ -157,8 +157,10 @@ const abi: any = [
 const contract: ContractInterface = new ethers.Contract(contractAddress, abi, wallet);
 
 // Variables para los valores del swap
-const tokenAddress = "0xB8c77482e45F1F44dE1745F52C74426C631bDD52"; // Dirección del token BNB
-const exchanges = ["0x67ee3Cb086F8a16f34beE3ca72FAD36F7Db929e2", "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82"]; // Direcciones de los exchanges
+// const tokenAddress = "0xB8c77482e45F1F44dE1745F52C74426C631bDD52"; // Dirección del token BNB
+const tokenAddress = "0x570a5d26f7765ecb712c0924e4de545b89fd43df"; // Direccion de Wrapped solana
+//const exchanges = ["0x67ee3Cb086F8a16f34beE3ca72FAD36F7Db929e2", "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82"]; // Dodo vs PancakeSwap V3
+const exchanges = ["0x10ed43c718714eb63d5aa57b78b54704e256024e", "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82"]; // PancakeSwap V2 vs PancakeSwap V3
 
 class ContractService {
     public async main(pAmount: string): Promise<boolean> {
@@ -210,7 +212,7 @@ class ContractService {
             }
 
             // Crear la transacción
-            const transactionData: string = await contract.encodeFunctionData('requestFlashLoan', [tokenAddress, amount, params])
+            const transactionData: string = await contract.interface.encodeFunctionData('requestFlashLoan', [tokenAddress, amount])
             // contract.instance.encodeFunctionData('requestFlashLoan', [tokenAddress, amount, params])
             const tx: ethers.TransactionRequest = {
                 from: wallet.address,
