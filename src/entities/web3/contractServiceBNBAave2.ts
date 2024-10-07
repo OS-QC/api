@@ -1,7 +1,9 @@
 import { ethers } from 'ethers';
 import AppConfig from '@config/AppConfig';
-const pancakeSwapAbi = require('./abis/pancakeSwapAbi.json');
-const dodoAbi = require('./abis/dodoAbi.json');
+// const pancakeSwapAbi = require('@entities/web3/pancakeSwapAbi.json');
+import pancakeSwapAbi from '@entities/web3/abis/pancakeRouter.json'
+// const dodoAbi = require('@entities/web3/abis/dodoAbi.json');
+import dodoAbi from '@entities/web3/abis/dodoAbi.json'
 
 // Configuración del proveedor y la cuenta
 const provider = new ethers.JsonRpcProvider('https://bsc-dataseed3.binance.org/');
