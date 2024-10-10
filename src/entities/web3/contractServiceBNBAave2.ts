@@ -6,11 +6,11 @@ import pancakeSwapAbi from '@entities/web3/abis/pancakeRouter.json'
 import dodoAbi from '@entities/web3/abis/dodoAbi.json'
 
 // Configuración del proveedor y la cuenta
-const provider = new ethers.JsonRpcProvider('https://bsc-dataseed3.binance.org/');
-const wallet = new ethers.Wallet(AppConfig.PRIVATE_KEY, provider);
+// const provider = new ethers.JsonRpcProvider('https://bsc-dataseed3.binance.org/');
+// const wallet = new ethers.Wallet(AppConfig.PRIVATE_KEY, provider);
 
 // Dirección del contrato de FlashLoan desplegado
-const flashLoanAddress = AppConfig.CONTRACT_ADDRESS;
+// const flashLoanAddress = AppConfig.CONTRACT_ADDRESS;
 
 // ABI del contrato de FlashLoan
 const flashLoanABI: any = [
@@ -168,15 +168,15 @@ class ContractService2 {
     private provider: ethers.JsonRpcProvider;
     private wallet: ethers.Wallet;
     private flashLoanContract: ethers.Contract;
-    private pancakeSwapContract: ethers.Contract;
-    private dodoContract: ethers.Contract;
+    // private pancakeSwapContract: ethers.Contract;
+    // private dodoContract: ethers.Contract;
 
     constructor() {
         this.provider = new ethers.JsonRpcProvider('https://bsc-dataseed3.binance.org/');
         this.wallet = new ethers.Wallet(AppConfig.PRIVATE_KEY, this.provider);
         this.flashLoanContract = new ethers.Contract(AppConfig.CONTRACT_ADDRESS, flashLoanABI, this.wallet);
-        this.pancakeSwapContract = new ethers.Contract(pancakeSwapAddress, pancakeSwapAbi, this.wallet);
-        this.dodoContract = new ethers.Contract(dodoAddress, dodoAbi, this.wallet);
+        new ethers.Contract(pancakeSwapAddress, pancakeSwapAbi, this.wallet);
+        new ethers.Contract(dodoAddress, dodoAbi, this.wallet);
     }
 
     public async main(pAmount: string): Promise<boolean> {
@@ -221,12 +221,17 @@ class ContractService2 {
                 console.log('Fondos suficientes para cubrir el costo de la transacción');
             }
 
+          //   const transactionData = contract.interface.encodeFunctionData('requestFlashLoan', [
+          //     "0xB8c77482e45F1F44dE1745F52C74426C631bDD52", // tokenAddress
+          //     amount,
+          //     params
+          // ]);
             const tx: ethers.TransactionRequest = {
                 from: this.wallet.address,
                 to: AppConfig.CONTRACT_ADDRESS,
                 gasLimit: ethers.toBeHex(gasEstimate),
                 gasPrice: gasPrice,
-                data: this.flashLoanContract.interface.encodeFunctionData('requestFlashLoan', [tokenAddress, amount, params])
+                data: this.flashLoanContract.interface.encodeFunctionData('requestFlashLoan', [tokenAddress, params])
             };
 
             const sentTx = await this.wallet.sendTransaction(tx);

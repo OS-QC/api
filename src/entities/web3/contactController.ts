@@ -19,7 +19,8 @@ import { DEFAULT_RETURN_FORMAT } from 'web3'
 // import UniswapService from './uniswapService'
 import HardhatService from './hardhatService'
 import ContractService from './contractServiceBNBAave'
-import ContractService2 from './contractServiceBNBAave2'
+// import ContractService2 from './contractServiceBNBAave2'
+// import ContractServiceWeb3 from './contractServiceWeb3'
 // TODO esto no funciona import * as CoinMarketCap from 'node-coinmarketcap-rest-api'
 
 @Route('contract')
@@ -28,13 +29,15 @@ export class contactController extends Controller {
   // private uniswapService: typeof UniswapService
   private hardhatService: typeof HardhatService
   private contractService: typeof ContractService
-  private contractService2: typeof ContractService2
+  // private contractService2: typeof ContractService2
+  // private contractServiceWeb3: typeof ContractServiceWeb3
   constructor() {
     super()
     // this.uniswapService = UniswapService
     this.hardhatService = HardhatService
     this.contractService = ContractService
-    this.contractService2 = ContractService2
+    // this.contractService2 = ContractService2
+    // this.contractServiceWeb3 = ContractServiceWeb3
   }
 
   /**
@@ -49,7 +52,7 @@ export class contactController extends Controller {
     ): Promise<{ success: boolean, data: any | null; token?: string; message?: any }> {
       try {
         console.log('requestBody :>> ', requestBody)
-        // TODO el abi es el contrato pero en array?
+        // TODO: el abi es el contrato pero en array?
         const abi = [
           {
               "constant": false,
@@ -316,7 +319,7 @@ export class contactController extends Controller {
         console.log('Default format:', estimatedGas);
 
         // estimatedGas = await deployment.estimateGas({ from: acc }, ETH_DATA_FORMAT);
-        // the returned data will be formatted as a hexstring
+        // the returned data will be formatted as a hexstringfsendTransaction
 
         console.log('Eth format:', estimatedGas);
         return { success: true, data: { gasPrice: estimatedGas.toString() }, message: 'success' }
@@ -378,18 +381,32 @@ export class contactController extends Controller {
       }
     }
 
-    @SuccessResponse('200', 'Ok')
-    @Post('/dinamicContract2')
-    public async dinamicContract2(@Body() requestBody: { amount: string }): Promise<{ success: boolean, data: any | null; token?: string; message?: any }> {
-      try {
-        const contract = await this.contractService2.main(requestBody.amount)
-        console.log('contract :>> ', contract)
-        return { success: true, data: "Ya interactuo", message: 'success' }
-      } catch (error) {
-        console.log('dio error');
-        this.setStatus(400) // HTTP 401 Unauthorized
-        return { success: false, data: null, message: 'Ocurrio un error' }
-      }
-    }
+    // @SuccessResponse('200', 'Ok')
+    // @Post('/dinamicContract2')
+    // public async dinamicContract2(@Body() requestBody: { amount: string }): Promise<{ success: boolean, data: any | null; token?: string; message?: any }> {
+    //   try {
+    //     const contract = await this.contractService2.main(requestBody.amount)
+    //     console.log('contract :>> ', contract)
+    //     return { success: true, data: "Ya interactuo", message: 'success' }
+    //   } catch (error) {
+    //     console.log('dio error');
+    //     this.setStatus(400) // HTTP 401 Unauthorized
+    //     return { success: false, data: null, message: 'Ocurrio un error' }
+    //   }
+    // }
+
+    // @SuccessResponse('200', 'Ok')
+    // @Post('/dinamicContract2')
+    // public async dinamicContractWeb3(@Body() requestBody: { amount: string }): Promise<{ success: boolean, data: any | null; token?: string; message?: any }> {
+    //   try {
+    //     const contract = await this.contractServiceWeb3.main(requestBody.amount)
+    //     console.log('contract :>> ', contract)
+    //     return { success: true, data: "Ya interactuo", message: 'success' }
+    //   } catch (error) {
+    //     console.log('dio error');
+    //     this.setStatus(400) // HTTP 401 Unauthorized
+    //     return { success: false, data: null, message: 'Ocurrio un error' }
+    //   }
+    // }
     
 }

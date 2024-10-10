@@ -7,7 +7,11 @@ import { UsersController } from './../entities/users/userController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AuthController } from './../entities/users/authController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { contactBCSController } from './../entities/bcsContract/contactBCSController';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { contactController } from './../entities/web3/contactController';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { arbitrationController } from './../entities/arbitration/arbitrationController';
 import { expressAuthentication } from './../middlewares/authentication';
 // @ts-ignore - no great way to install types from subpackage
 import type { Request as ExRequest, Response as ExResponse, RequestHandler, Router } from 'express';
@@ -297,6 +301,35 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/contractBCS/all',
+            ...(fetchMiddlewares<RequestHandler>(contactBCSController)),
+            ...(fetchMiddlewares<RequestHandler>(contactBCSController.prototype.all)),
+
+            async function contactBCSController_all(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const controller = new contactBCSController();
+
+              await templateService.apiHandler({
+                methodName: 'all',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 201,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/contract/contact',
             ...(fetchMiddlewares<RequestHandler>(contactController)),
             ...(fetchMiddlewares<RequestHandler>(contactController.prototype.contact)),
@@ -503,13 +536,12 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/contract/dinamicContract2',
-            ...(fetchMiddlewares<RequestHandler>(contactController)),
-            ...(fetchMiddlewares<RequestHandler>(contactController.prototype.dinamicContract2)),
+        app.get('/arbitration/all',
+            ...(fetchMiddlewares<RequestHandler>(arbitrationController)),
+            ...(fetchMiddlewares<RequestHandler>(arbitrationController.prototype.all)),
 
-            async function contactController_dinamicContract2(request: ExRequest, response: ExResponse, next: any) {
+            async function arbitrationController_all(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    requestBody: {"in":"body","name":"requestBody","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"amount":{"dataType":"string","required":true}}},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -518,15 +550,15 @@ export function RegisterRoutes(app: Router) {
             try {
                 validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
-                const controller = new contactController();
+                const controller = new arbitrationController();
 
               await templateService.apiHandler({
-                methodName: 'dinamicContract2',
+                methodName: 'all',
                 controller,
                 response,
                 next,
                 validatedArgs,
-                successStatus: 200,
+                successStatus: 201,
               });
             } catch (err) {
                 return next(err);

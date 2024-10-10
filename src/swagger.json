@@ -532,6 +532,45 @@
 				"parameters": []
 			}
 		},
+		"/contractBCS/all": {
+			"get": {
+				"operationId": "All",
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {},
+										"token": {
+											"type": "string"
+										},
+										"data": {
+											"nullable": true
+										},
+										"success": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"data",
+										"success"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Verificar contrato.",
+				"tags": [
+					"ContractBCS"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
 		"/contract/contact": {
 			"post": {
 				"operationId": "Contact",
@@ -852,12 +891,12 @@
 				}
 			}
 		},
-		"/contract/dinamicContract2": {
-			"post": {
-				"operationId": "DinamicContract2",
+		"/arbitration/all": {
+			"get": {
+				"operationId": "All",
 				"responses": {
-					"200": {
-						"description": "Ok",
+					"201": {
+						"description": "Created",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -883,29 +922,12 @@
 						}
 					}
 				},
+				"description": "Verificar contrato.",
 				"tags": [
-					"Contract"
+					"Arbitration"
 				],
 				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"properties": {
-									"amount": {
-										"type": "string"
-									}
-								},
-								"required": [
-									"amount"
-								],
-								"type": "object"
-							}
-						}
-					}
-				}
+				"parameters": []
 			}
 		}
 	},

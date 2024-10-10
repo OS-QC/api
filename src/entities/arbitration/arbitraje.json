@@ -1,0 +1,54 @@
+{
+  "dexes": [
+    {
+      "name": "Uniswap",
+      "pairs": [
+        {"pair": "ETH/USDT", "price": 1850.50},
+        {"pair": "BTC/ETH", "price": 0.055},
+        {"pair": "DAI/USDT", "price": 1.00},
+        {"pair": "UNI/ETH", "price": 0.0035},
+        {"pair": "LINK/USDT", "price": 7.50}
+      ]
+    },
+    {
+      "name": "SushiSwap",
+      "pairs": [
+        {"pair": "ETH/USDT", "price": 1700.75},
+        {"pair": "BTC/ETH", "price": 0.0548},
+        {"pair": "DAI/USDT", "price": 1.00},
+        {"pair": "SUSHI/ETH", "price": 0.0028},
+        {"pair": "AAVE/USDT", "price": 65.00},
+        {"pair": "YFI/ETH", "price": 0.035},
+        {"pair": "COMP/USDT", "price": 55.00}
+      ]
+    },
+    {
+      "name": "PancakeSwap",
+      "pairs": [
+        {"pair": "BNB/USDT", "price": 300.00},
+        {"pair": "CAKE/BNB", "price": 0.005},
+        {"pair": "BUSD/USDT", "price": 1.00},
+        {"pair": "ETH/BNB", "price": 6.00},
+        {"pair": "BTC/USDT", "price": 33000.00},
+        {"pair": "ADA/USDT", "price": 1.20},
+        {"pair": "DOT/USDT", "price": 25.00},
+        {"pair": "DOGE/USDT", "price": 0.25}
+      ]
+    },
+    {
+      "name": "Balancer",
+      "pairs": [
+        {"pair": "BAL/USDT", "price": 20.00},
+        {"pair": "ETH/USDT", "price": 1801.00},
+        {"pair": "BTC/ETH", "price": 0.0552},
+        {"pair": "UNI/USDT", "price": 6.50},
+        {"pair": "LINK/ETH", "price": 0.004},
+        {"pair": "MKR/USDT", "price": 2500.00},
+        {"pair": "SNX/USDT", "price": 10.00},
+        {"pair": "CRV/USDT", "price": 3.00},
+        {"pair": "SUSHI/USDT", "price": 8.00},
+        {"pair": "AAVE/ETH", "price": 0.035}
+      ]
+    }
+  ]
+}
